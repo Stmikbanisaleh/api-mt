@@ -98,19 +98,44 @@ router.post('/addpegawai', checkAuth, async function (req, res, next) {
                     nik,
                 } = req.body;
                 try {
-                    const pegawai = PegawaiSchema.create({
-                        nama,
-                        kode_kepegawaian,
-                        nik,
-                    });
-                    if (pegawai) {
-                        res.status(201).json({
-                            status: 200,
-                            messages: 'User berhasil ditambahkan',
-                            data: pegawai,
-                        })
-                    }
-
+                    PegawaiSchema.findAll({
+                        where: {
+                          kode_kepegawaian: req.body.kode_kepegawaian
+                        }
+                      }).then( async (data) => {
+                        if (data.length > 0) {
+                          res.status(401).json({
+                            status: 401,
+                            messages: 'Kode Kepegawaian Already Exist',
+                          })
+                        } else {
+                            PegawaiSchema.findAll({
+                                where: {
+                                  nik: req.body.nik
+                                }
+                              }).then( async (data) => {
+                                if (data.length > 0) {
+                                  res.status(401).json({
+                                    status: 401,
+                                    messages: 'NIK Already Exist',
+                                  })
+                                } else {
+                                    const pegawai = PegawaiSchema.create({
+                                        nama,
+                                        kode_kepegawaian,
+                                        nik,
+                                    });
+                                    if (pegawai) {
+                                        res.status(201).json({
+                                            status: 200,
+                                            messages: 'User berhasil ditambahkan',
+                                            data: pegawai,
+                                        })
+                                    }
+                                }
+                            })
+                        }
+                    })
                 } catch (error) {
                     res.status(400).json({
                         'status': 'ERROR',

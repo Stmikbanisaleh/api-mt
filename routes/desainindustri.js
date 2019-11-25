@@ -350,7 +350,7 @@ router.post('/getdesainstatus', checkAuth, function (req, res, next) {
 
 
 router.post('/getnonpendesain', checkAuth, function (req, res, next) {
-  ddesainSchema.sequelize.query('SELECT DISTINCT dp.*,mp.nik, mp.nama from ddesainindustri dp JOIN msnonpegawais mp ON dp.nik = mp.nik')
+  ddesainSchema.sequelize.query('SELECT DISTINCT dp.*,mp.nik, mp.nama from ddesainindustri dp JOIN msnonpegawai mp ON dp.nik = mp.nik')
     .then((data) => {
       if (data.length < 1) {
         res.status(404).json({

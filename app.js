@@ -78,7 +78,7 @@ app.use('/nonpegawai', nonpegawaiRouter);
 app.use('/rev', revRouter);
 app.use('/jenisdokumen', jenisdokumenRouter);
 app.use('/lib', msipmancodeRouter);
-app.use('/patens', dpatenRouter);
+app.use('/dpatens', dpatenRouter);
 app.use('/dokumen', dokumenRouter);
 app.use('/mereks', dmerekRouter);
 app.use('/download', downloadRouter);
