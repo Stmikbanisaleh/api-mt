@@ -2,4 +2,4 @@
 
 #npm install
 #npm run dev
-#running di port 3000
+#running di port 3001
