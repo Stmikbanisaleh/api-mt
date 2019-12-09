@@ -115,7 +115,8 @@ router.post('/getdesaindraftdetail', checkAuth, function (req, res, next) {
     id: req.body.id,
   }
   Joi.validate(payload, validate, (error) => {
-    desainSchema.sequelize.query('SELECT `msdesainindustri`.*,`ddesainindustri`.*, `mspegawai`.* FROM `msdesainindustri`  JOIN `ddesainindustri` ON `msdesainindustri`.`ID` = `ddesainindustri`.`ID_DESAIN_INDUSTRI` JOIN `mspegawai` ON `ddesainindustri`.`NIK` = `mspegawai`.`NIK` WHERE `msdesainindustri`.`ID` = "' + req.body.id + '"')
+    desainSchema.sequelize.query('SELECT `msdesainindustri`.*,`ddesainindustri`.*, `mspegawai`.* FROM `msdesainindustri`  JOIN `ddesainindustri` ON `msdesainindustri`.`ID` = `ddesainindustri`.`ID_DESAIN_INDUSTRI` JOIN `mspegawai` ON `ddesainindustri`.`NIK` = `mspegawai`.`NIK` WHERE `msdesainindustri`.`ID` = "' + req.body.id + '"', {
+       type: desainSchema.sequelize.QueryTypes.SELECT })
       .then((data) => {
         if (data.length < 1) {
           res.status(404).json({
@@ -350,7 +351,7 @@ router.post('/getdesainstatus', checkAuth, function (req, res, next) {
 
 
 router.post('/getnonpendesain', checkAuth, function (req, res, next) {
-  ddesainSchema.sequelize.query('SELECT DISTINCT dp.*,mp.nik, mp.nama from ddesainindustri dp JOIN msnonpegawais mp ON dp.nik = mp.nik')
+  ddesainSchema.sequelize.query('SELECT DISTINCT dp.*,mp.nik, mp.nama from ddesainindustri dp JOIN msnonpegawai mp ON dp.nik = mp.nik')
     .then((data) => {
       if (data.length < 1) {
         res.status(404).json({
@@ -511,7 +512,9 @@ router.post('/getpendesain', checkAuth, function (req, res, next) {
 
 router.post('/getpendesainbyid', checkAuth, function (req, res, next) {
   ddesainSchema.sequelize.query('SELECT DISTINCT * FROM `ddesainindustri` ' +
-    'WHERE `ddesainindustri`.`id_desain_industri` = "' + req.body.id + '"')
+    'WHERE `ddesainindustri`.`id_desain_industri` = "' + req.body.id + '"',{
+      type: ddesainSchema.sequelize.QueryTypes.SELECT
+    })
     .then((data) => {
       if (data.length < 1) {
         res.status(404).json({
@@ -664,6 +667,7 @@ router.post('/updateverifikasidesainsave', checkAuth, function (req, res, next) 
 
   const payload = {
     nomor_pendaftar: req.body.nomor_pendaftar,//
+    nomor_desain: req.body.nomor_desain,//
     pemeriksa_desain: req.body.pemeriksa_desain,//
     kontak_pemeriksa: req.body.kontak_pemeriksa,//
     email_pemeriksa: req.body.email_pemeriksa,//
@@ -675,6 +679,7 @@ router.post('/updateverifikasidesainsave', checkAuth, function (req, res, next) 
   }
 
   let validate = Joi.object().keys({
+    nomor_desain: Joi.string().required(),
     nomor_pendaftar: Joi.string().required(),
     pemeriksa_desain: Joi.string().required(),
     kontak_pemeriksa: Joi.string().required(),

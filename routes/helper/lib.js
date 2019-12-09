@@ -60,13 +60,12 @@ const upload = multer({
 
 router.post('/adddokumen', checkAuth, function (req, res, next) {
   var base64Data = req.body.dokumen;
-
-  require("fs").writeFileSync(`./public/file/${req.body.name}`, base64Data, 'base64', function (error, data) {
-    console.log('File Berhasil Di generate');
-  });
-
+  if(req.body.dokumen !== undefined){
+    require("fs").writeFileSync(`./public/file/${req.body.name}`, base64Data, 'base64', function (error, data) {
+      console.log('File Berhasil Di generate');
+    });
+  }
   // console.log(encode_image);
-
   let validate = Joi.object().keys({
     nomor_pendaftar: Joi.string().required(),
     // dokumen: Joi.string().required(),

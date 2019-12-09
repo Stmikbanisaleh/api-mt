@@ -117,7 +117,7 @@ router.post('/getdokumenver', checkAuth, function (req, res, next) {
 });
 
 router.post('/getnoninventor', checkAuth, function (req, res, next) {
-  dPatenSchema.sequelize.query('SELECT DISTINCT `dpaten`.*,`msnonpegawais`.`NIK`,`msnonpegawai`.`NAMA` FROM `dpaten` JOIN `msnonpegawai` ON `dpaten`.`NIK` = `msnonpegawai`.`NIK`')
+  dPatenSchema.sequelize.query('SELECT DISTINCT `dpaten`.*,`msnonpegawai`.`NIK`,`msnonpegawai`.`NAMA` FROM `dpaten` JOIN `msnonpegawai` ON `dpaten`.`NIK` = `msnonpegawai`.`NIK`')
     .then((data) => {
       if (data.length < 1) {
         res.status(404).json({
@@ -206,7 +206,7 @@ router.post('/getpatendiajukandetail', checkAuth, function (req, res, next) {
       'SELECT `mspaten`.*,(SELECT ' +
       'nama_rev ' +
       ' FROM ' +
-      ' msrevs '+
+      ' msrev '+
       ' WHERE '+
        ' id = `mspaten`.`jenis_paten`) as jenis_paten, (SELECT nama_rev FROM msrev WHERE id = `mspaten`.`unit_kerja`) as unit_kerja FROM `mspaten` WHERE`mspaten`.`status` = 20 AND`mspaten`.`id` = "'+req.body.id+'"')
       .then((data) => {
@@ -817,18 +817,18 @@ router.post('/ajukan', checkAuth, function (req, res, next) {
 })
 
 router.post('/updatepatensave', checkAuth, function (req, res, next) {
-  // if(req.body.abstrak !== undefined && req.body.abstrak_name !== undefined) {
+  if(req.body.abstrak !== undefined && req.body.abstrak_name !== undefined) {
     var base64Data = req.body.abstrak;
     require("fs").writeFileSync(`./public/file/${req.body.abstrak_name}`, base64Data, 'base64', function (error, data) {
       console.log('File Berhasil Di generate');
     });
-  // }
-  // if(req.body.gambar !== undefined && req.body.gambar_name !== undefined) {
+  }
+  if(req.body.gambar !== undefined && req.body.gambar_name !== undefined) {
     var base64Data2 = req.body.gambar;
     require("fs").writeFileSync(`./public/file/${req.body.gambar_name}`, base64Data2, 'base64', function (error, data) {
       console.log('File Berhasil Di generate');
     });
-  // }
+  }
 
 
   const payload = {
@@ -896,7 +896,8 @@ router.post('/updateverifikasipatensave', checkAuth, function (req, res, next) {
     sertifikasi: req.body.sertifikasi,
     filling: req.body.filling,
     formalitas: req.body.formalitas,
-    publis: req.body.publis,
+    publish: req.body.publish,
+    jumlah_klaim: req.body.jumlah_klaim,
     pembayaran: req.body.pembayaran,
     pemberian: req.body.pemberian,
     nomor_paten: req.body.nomor_paten,

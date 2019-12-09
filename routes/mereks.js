@@ -282,7 +282,7 @@ router.post('/getmerekdiajukandetail', checkAuth, function (req, res, next) {
     id: req.body.id,
   }
   Joi.validate(payload, validate, (error) => {
-    MerekSchema.sequelize.query('SELECT msm.*,msr.nama_rev FROM msrevs msr  JOIN msmerek msm ON msr.id = msm.unit_kerja WHERE msm.status = "' + req.body.status + '" AND msm.id = "' + req.body.id + '"')
+    MerekSchema.sequelize.query('SELECT msm.*,msr.nama_rev FROM msrev msr  JOIN msmerek msm ON msr.id = msm.unit_kerja WHERE msm.status = "' + req.body.status + '" AND msm.id = "' + req.body.id + '"')
       .then((data) => {
         if (data.length < 1) {
           res.status(404).json({
@@ -365,7 +365,7 @@ router.post('/getmerekdiajukandetail', checkAuth, function (req, res, next) {
     id: req.body.id,
   }
   Joi.validate(payload, validate, (error) => {
-    MerekSchema.sequelize.query('SELECT msm.*,msr.nama_rev FROM msrevs msr  JOIN msmerek msm ON msr.id = msm.unit_kerja WHERE msm.status = "' + req.body.status + '" AND msm.id = "' + req.body.id + '"')
+    MerekSchema.sequelize.query('SELECT msm.*,msr.nama_rev FROM msrev msr  JOIN msmerek msm ON msr.id = msm.unit_kerja WHERE msm.status = "' + req.body.status + '" AND msm.id = "' + req.body.id + '"')
       .then((data) => {
         if (data.length < 1) {
           res.status(404).json({
@@ -412,7 +412,7 @@ router.post('/getmerekstatus', checkAuth, function (req, res, next) {
   const status = req.body.status;
 
   if (role_id == 18) {
-    MerekSchema.sequelize.query('SELECT a.pernah_diajukan,a.judul,a.id,a.createdAt,b.keterangan,b.nama_rev FROM msrevs b LEFT JOIN msmerek a ON b.ID = a.UNIT_KERJA WHERE a.status = ' + status + ' AND a.KODE_INPUT = ' + userId + ' ')
+    MerekSchema.sequelize.query('SELECT a.pernah_diajukan,a.judul,a.id,a.createdAt,b.keterangan,b.nama_rev FROM msrev b LEFT JOIN msmerek a ON b.ID = a.UNIT_KERJA WHERE a.status = ' + status + ' AND a.KODE_INPUT = ' + userId + ' ')
       .then((data) => {
         if (data.length < 1) {
           res.status(404).json({
@@ -432,7 +432,7 @@ router.post('/getmerekstatus', checkAuth, function (req, res, next) {
         });
       });
   } else {
-    MerekSchema.sequelize.query('SELECT a.pernah_diajukan,a.judul,a.id,a.createdAt,b.keterangan,b.nama_rev FROM msrevs b LEFT JOIN msmerek a ON b.ID = a.UNIT_KERJA WHERE a.status = ' + status + ' ')
+    MerekSchema.sequelize.query('SELECT a.pernah_diajukan,a.judul,a.id,a.createdAt,b.keterangan,b.nama_rev FROM msrev b LEFT JOIN msmerek a ON b.ID = a.UNIT_KERJA WHERE a.status = ' + status + ' ')
       .then((data) => {
         if (data.length < 1) {
           res.status(404).json({
@@ -518,7 +518,7 @@ router.post('/adddmerek', checkAuth, async function (req, res, next) {
       nik: req.body.nik,
     } = req.body;
     try {
-      const dmerek = dmerekSchema.create(schema)
+      const dmerek = DmerekSchema.create(schema)
         .then(result => res.status(201).json({
           status: 201,
           messages: 'DMerek berhasil ditambahkan',
@@ -528,7 +528,6 @@ router.post('/adddmerek', checkAuth, async function (req, res, next) {
       res.status(400).json({
         'status': 'ERROR',
         'messages': error,
-        'data': {},
       })
     }
     if (error) {
@@ -549,7 +548,7 @@ router.post('/deletedmerek', checkAuth, function (req, res, next) {
   }
 
   Joi.validate(payload, validate, (error) => {
-    dmerekSchema.destroy({
+    DmerekSchema.destroy({
       where: {
         id_merek: req.body.id_merek,
       }
@@ -593,7 +592,7 @@ router.post('/deletedraft', checkAuth, function (req, res, next) {
             message: 'Not Found',
           });
         }
-        dmerekSchema.destroy({
+        DmerekSchema.destroy({
           where: {
             id_merek: req.body.id,
           }
