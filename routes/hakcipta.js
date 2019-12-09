@@ -264,6 +264,50 @@ router.post('/getpenciptabyid', checkAuth, function (req, res, next) {
 
 });
 
+router.post('/gethakciptadraftdetailv2', checkAuth, function (req, res, next) {
+  let validate = Joi.object().keys({
+    id: Joi.number().required(),
+  });
+
+  let payload = {
+    id: req.body.id
+  }
+  Joi.validate(payload, validate, (error) => {
+    hakciptaSchema.sequelize.query('SELECT `mshakcipta`.*,`dhakcipta`.*, `mspegawai`.* ' +
+      'FROM `mshakcipta` ' +
+      'JOIN `dhakcipta` ON `mshakcipta`.`ID` = `dhakcipta`.`ID_HAKCIPTA` ' +
+      'JOIN `mspegawai` ON `dhakcipta`.`NIK` = `mspegawai`.`NIK` ' +
+      'WHERE `mshakcipta`.`ID` = "' + req.body.id + '"', {
+       type: hakciptaSchema.sequelize.QueryTypes.SELECT
+      })
+      .then((data) => {
+        if (data.length < 1) {
+          res.status(404).json({
+            message: 'Not Found',
+          });
+        }
+        else {
+          res.status(200).json({
+            data
+          })
+        }
+      })
+      .catch((err) => {
+        res.status(500).json({
+          error: err,
+          status: 500
+        });
+      });
+    if (error) {
+      res.status(400).json({
+        error,
+        status: 400
+      });
+    }
+  })
+
+});
+
 router.post('/gethakciptadraftdetail', checkAuth, function (req, res, next) {
   let validate = Joi.object().keys({
     id: Joi.number().required(),
