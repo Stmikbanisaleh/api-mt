@@ -20,10 +20,10 @@ router.post('/getdokumenver', checkAuth, function (req, res, next) {
     code: req.body.code
   }
   Joi.validate(payload, validate, (error) => {
-    MerekSchema.sequelize.query('SELECT `msdokumens`.*,`msjenisdokumens`.*,`msjenisdokumens`.`id` '+
-    'FROM `msdokumens` '+
-    'JOIN `msjenisdokumens` ON `msdokumens`.`JENIS_DOKUMEN` = `msjenisdokumens`.`ID` '+
-    'WHERE `msdokumens`.`NOMOR_PENDAFTAR` = "' + req.body.code + '"  AND `msdokumens`.`ROLE` = 1')
+    MerekSchema.sequelize.query('SELECT `msdokumen`.*,`msjenisdokumen`.*,`msjenisdokumen`.`id` '+
+    'FROM `msdokumen` '+
+    'JOIN `msjenisdokumen` ON `msdokumen`.`JENIS_DOKUMEN` = `msjenisdokumen`.`ID` '+
+    'WHERE `msdokumen`.`NOMOR_PENDAFTAR` = "' + req.body.code + '"  AND `msdokumen`.`ROLE` = 1')
       .then((data) => {
         if (data.length < 1) {
           res.status(404).json({

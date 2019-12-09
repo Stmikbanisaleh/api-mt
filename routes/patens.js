@@ -381,7 +381,7 @@ router.post('/getpatendraft', checkAuth, function (req, res, next) {
       ' FROM `mspaten` '+
      ' JOIN `dpaten` ON `mspaten`.`ID` = `dpaten`.`ID_PATEN` '+
       ' JOIN `mspegawai` ON `dpaten`.`NIK` = `mspegawai`.`NIK` '+
-     ' WHERE `mspaten`.`ID` = ' + req.body.id + " ")
+     ' WHERE `mspaten`.`ID` = ' + req.body.id)
     .then((data) => {
       if (data.length < 1) {
         res.status(404).json({
